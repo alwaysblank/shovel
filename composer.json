@@ -1,0 +1,12 @@
+{
+    "name": "murmurcreative/shovel",
+    "description": "Move bits into and out of a zipped bucket.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ben Martinez-Bateman",
+            "email": "ben@alwaysblank.org"
+        }
+    ],
+    "require": {}
+}
