@@ -1,6 +1,9 @@
 <?php namespace Murmur\Tools;
 
 use \Zenodorus\Filesystem;
+use \ZipArchive;
+use \RecursiveIteratorIterator;
+use \RecursiveDirectoryIterator;
 
 class Shovel
 {
@@ -22,6 +25,8 @@ class Shovel
         if (null === $timestamp) {
             $timestamp = time();
         }
+
+        $this->timestamp = $timestamp;
     }
 
     /**
@@ -32,7 +37,7 @@ class Shovel
      */
     public static function archiveName(string $timestamp)
     {
-        return sprintf('transfer_%s.zip', $timestamp);
+        return sprintf('source_%s.zip', $timestamp);
     }
     
     /**
@@ -45,8 +50,8 @@ class Shovel
     public static function deployName(string $timestamp)
     {
         return sprintf('deploy_%s', date_format(
-            date_create($timestamp),
-            $this::TIME_FORMAT
+            date_create_from_format('U', $timestamp),
+            static::TIME_FORMAT
         ));
     }
 
@@ -82,11 +87,7 @@ class Shovel
      * @param string $ignore        (optional) Specify a regex for ignoring.
      * @return boolean              Whether or not the zipping succeeded.
      */
-    public function create(
-        string $sourceDir,
-        string $createDir = null,
-        string $ignore = null
-    ) {
+    public function create(string $sourceDir, string $createDir = null, string $ignore = null) {
         // If $ignore was not set, use reasonable default
         $ignore = sprintf(
             "/^(.*node_modules|.*resources%s%sassets)(.*)$/i",
