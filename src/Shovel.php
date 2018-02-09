@@ -11,7 +11,7 @@ class Shovel
     protected $timestamp;
     protected $log;
 
-    public const TIME_FORMAT = 'Y.m.d.Gis';
+    public const TIME_FORMAT = 'Y.m.d.His';
 
     /**
      * Assigns an immutable timestamp.
@@ -37,7 +37,10 @@ class Shovel
      */
     public static function archiveName(string $timestamp)
     {
-        return sprintf('source_%s.zip', $timestamp);
+        return sprintf('source_%s.zip', date_format(
+            date_create_from_format('U', $timestamp),
+            static::TIME_FORMAT
+        ));
     }
     
     /**
