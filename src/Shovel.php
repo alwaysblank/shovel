@@ -91,7 +91,8 @@ class Shovel
      * @param string $ignore        (optional) Specify a regex for ignoring.
      * @return boolean              Whether or not the zipping succeeded.
      */
-    public function create(string $sourceDir, string $createDir = null, string $ignore = null) {
+    public function create(string $sourceDir, string $createDir = null, string $ignore = null)
+    {
         // If $ignore was not set, use reasonable default
         $ignore = sprintf(
             "/^(.*node_modules|.*resources%s%sassets)(.*)$/i",
