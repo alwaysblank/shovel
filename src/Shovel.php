@@ -12,6 +12,7 @@ class Shovel
     protected $log;
 
     public const TIME_FORMAT = 'Y.m.d.His';
+    public const TIME_REGEX = '/(\d{4}\.\d{2}.\d{2}.\d{6})/';
 
     /**
      * Assigns an immutable timestamp.
