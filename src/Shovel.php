@@ -11,8 +11,8 @@ class Shovel
     protected $timestamp;
     protected $log;
 
-    public const TIME_FORMAT = 'Y.m.d.His';
-    public const TIME_REGEX = '/(\d{4}\.\d{2}.\d{2}.\d{6})/';
+    const TIME_FORMAT = 'Y.m.d.His';
+    const TIME_REGEX = '/(\d{4}\.\d{2}.\d{2}.\d{6})/';
 
     /**
      * Assigns an immutable timestamp.
@@ -43,6 +43,16 @@ class Shovel
             static::TIME_FORMAT
         ));
     }
+
+    /**
+     * Get an archive name based on the class's internal timestamp.
+     *
+     * @return string
+     */
+    public function currentArchiveName()
+    {
+        return $this->archiveName($this->timestamp);
+    }
     
     /**
      * Get the name to use for a deploy, based on timestamp and TIME_FORMAT
@@ -57,6 +67,16 @@ class Shovel
             date_create_from_format('U', $timestamp),
             static::TIME_FORMAT
         ));
+    }
+
+    /**
+     * Get a deploy name based on the class's internal timestamp.
+     *
+     * @return string
+     */
+    public function currentDeployName()
+    {
+        return $this->deployName($this->timestamp);
     }
 
     /**
@@ -94,14 +114,16 @@ class Shovel
     public function create(string $sourceDir, string $createDir = null, string $ignore = null)
     {
         // If $ignore was not set, use reasonable default
-        $ignore = sprintf(
-            "/^(.*node_modules|.*resources%s%sassets)(.*)$/i",
-            '\\',
-            DIRECTORY_SEPARATOR
-        );
+        if (null === $ignore) {
+            $ignore = sprintf(
+                "/^(.*node_modules|.*resources%s%sassets)(.*)$/i",
+                '\\',
+                DIRECTORY_SEPARATOR
+            );
+        }
 
         // Set archive name
-        $archiveName = $this->archiveName($this->timestamp);
+        $archiveName = $this->currentArchiveName();
 
         // Concatenate destination directory
         if (null !== $createDir) {
@@ -177,7 +199,7 @@ class Shovel
      */
     public function extract(string $sourceArchive, string $destinationDir = null)
     {
-        $deployName = $this->deployName($this->timestamp);
+        $deployName = $this->currentDeployName();
 
         // Concatenate destination directory
         if (null !== $destinationDir) {

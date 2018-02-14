@@ -11,23 +11,23 @@ class ShovelTest extends TestCase
     const TIMESTAMP = '1518044860';
 
     const TESTDIRS = [
-        'tests/files/star',
-        'tests/files/star/wars',
-        'tests/files/star/trek',
-        'tests/files/star/gate',
-        'tests/files/john',
-        'tests/files/john/wick',
-        'tests/files/john/conner',
+        'tmp/files/star',
+        'tmp/files/star/wars',
+        'tmp/files/star/trek',
+        'tmp/files/star/gate',
+        'tmp/files/john',
+        'tmp/files/john/wick',
+        'tmp/files/john/conner',
     ];
 
     const TESTFILES = [
-        'tests/files/star/wars/millenium.falcon',
-        'tests/files/star/trek/starship.enterprise',
-        'tests/files/star/trek/deepspace.nine',
-        'tests/files/john/conner/thumbs.up'
+        'tmp/files/star/wars/millenium.falcon',
+        'tmp/files/star/trek/starship.enterprise',
+        'tmp/files/star/trek/deepspace.nine',
+        'tmp/files/john/conner/thumbs.up'
     ];
 
-    protected function setupTestFiles()
+    protected function setUp()
     {
         $fs = new Filesystem();
 
@@ -35,17 +35,17 @@ class ShovelTest extends TestCase
         $fs->touch($this::TESTFILES);
     }
 
-    protected function teardownTestFiles()
+    protected function tearDown()
     {
-        $fs = new Filesystem();
-
-        $fs->remove(array_merge($this::TESTFILES, $this::TESTDIRS));
+        ZenoFS::recursiveRemove(ZenoFS::slash(__DIR__, 'tmp'));
     }
 
     public function testArchiveName()
     {
         $this->assertEquals(
-            sprintf('source_%s.zip', $this::TIMESTAMP),
+            sprintf('source_%s.zip', date_format(date_create_from_format(
+                'U', $this::TIMESTAMP
+            ), 'Y.m.d.Gis')),
             Shovel::archiveName($this::TIMESTAMP),
             "Archive name does not match."
         );
@@ -64,17 +64,15 @@ class ShovelTest extends TestCase
 
     public function testCreate()
     {
-        $this->setupTestFiles();
-
         $timestamp = time();
         $Shovel = new Shovel($timestamp);
         $Shovel->create(
-            ZenoFS::resolve(ZenoFS::slash(__DIR__, 'files')),
-            ZenoFS::resolve(ZenoFS::slash(__DIR__))
+            ZenoFS::resolve(ZenoFS::slash(__DIR__, 'tmp', 'files')),
+            ZenoFS::resolve(ZenoFS::slash(__DIR__, 'tmp'))
         );
 
         $zip = new \ZipArchive;
-        $archive = ZenoFS::slash(__DIR__, Shovel::archiveName($timestamp));
+        $archive = ZenoFS::slash(__DIR__, 'tmp', $Shovel->currentArchiveName());
         $zip->open($archive);
         foreach ($this::TESTFILES as $file) {
             $bits = explode('/', $file);
@@ -85,23 +83,19 @@ class ShovelTest extends TestCase
             );
         }
         $zip->close();
-        unlink($archive);
-        $this->teardownTestFiles();
     }
     
     public function testExtract()
     {
-        // Set up
-        $this->setupTestFiles();
         $Shovel = new Shovel($this::TIMESTAMP);
         $Shovel->create(
-            ZenoFS::resolve(ZenoFS::slash(__DIR__, 'files')),
-            ZenoFS::resolve(ZenoFS::slash(__DIR__))
+            ZenoFS::resolve(ZenoFS::slash(__DIR__, 'tmp', 'files')),
+            ZenoFS::resolve(ZenoFS::slash(__DIR__, 'tmp'))
         );
-        $archive = ZenoFS::slash(__DIR__, Shovel::archiveName($this::TIMESTAMP));
+        $archive = ZenoFS::slash(__DIR__, 'tmp', $Shovel->currentArchiveName());
         $Shovel->extract(
             $archive,
-            ZenoFS::resolve(ZenoFS::slash(__DIR__, 'extract'))
+            ZenoFS::resolve(ZenoFS::slash(__DIR__, 'tmp', 'extract'))
         );
 
         foreach ($this::TESTFILES as $file) {
@@ -110,17 +104,13 @@ class ShovelTest extends TestCase
             $bits = array_merge(
                 [
                     __DIR__,
+                    'tmp',
                     'extract',
-                    Shovel::deployName($this::TIMESTAMP),
+                    $Shovel->currentDeployName(),
                 ],
                 $bits
             );
             $this->assertFileExists(ZenoFS::slashAr($bits));
         }
-         
-        // Tear down
-        unlink($archive);
-        ZenoFS::recursiveRemove(ZenoFS::slash(__DIR__, 'extract'));
-        $this->teardownTestFiles();
     }
 }
