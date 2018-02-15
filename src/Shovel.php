@@ -1,4 +1,4 @@
-<?php namespace Murmur\Tools;
+<?php namespace AlwaysBlank;
 
 use \Zenodorus\Filesystem;
 use \ZipArchive;

@@ -1,5 +1,5 @@
 <?php
-namespace Murmur\Tools;
+namespace AlwaysBlank;
 
 use \PHPUnit\Framework\TestCase;
 use \Symfony\Component\Filesystem\Filesystem;

@@ -1,5 +1,5 @@
 {
-    "name": "murmurcreative/shovel",
+    "name": "alwaysblank/shovel",
     "description": "Move bits into and out of a zipped bucket.",
     "license": "MIT",
     "authors": [
@@ -20,7 +20,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Murmur\\Tools\\": "src"
+            "AlwaysBlank\\": "src"
         }
     },
     "scripts": {
