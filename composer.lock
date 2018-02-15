@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3c4fcfda4f4214d2837f58cd28cbed6a",
+    "content-hash": "6fa3a164305f5c18cd5a558b3e4cc757",
     "packages": [
         {
             "name": "zenodorus/filesystem",
-            "version": "0.1.7",
+            "version": "0.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zenodorus-tools/filesystem.git",
-                "reference": "95f5b7b6e1b9f9c9014708c41aeae7e7fab1d31e"
+                "reference": "ed6ebe340dfdf1180016b5c3635f85d157e776e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zenodorus-tools/filesystem/zipball/95f5b7b6e1b9f9c9014708c41aeae7e7fab1d31e",
-                "reference": "95f5b7b6e1b9f9c9014708c41aeae7e7fab1d31e",
+                "url": "https://api.github.com/repos/zenodorus-tools/filesystem/zipball/ed6ebe340dfdf1180016b5c3635f85d157e776e7",
+                "reference": "ed6ebe340dfdf1180016b5c3635f85d157e776e7",
                 "shasum": ""
             },
             "require": {
@@ -47,7 +47,7 @@
             ],
             "description": "Help for your filesystem.",
             "homepage": "https://zenodor.us",
-            "time": "2018-02-13T22:22:54+00:00"
+            "time": "2018-02-15T19:13:03+00:00"
         }
     ],
     "packages-dev": [
